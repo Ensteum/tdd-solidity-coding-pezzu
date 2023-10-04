@@ -3,20 +3,28 @@
 pragma solidity ^0.8.9;
 
 contract HelloWorld {
-    string private greeting;
+    bytes32 public greeting;
     address public owner;
 
     constructor() {
-        greeting = "Hello World!";
+        greeting = bytes32("Hello World!");
         owner = msg.sender;
     }
 
     function helloWorld() public view returns (bytes32) {
-        return bytes32(bytes(greeting));
+        return (greeting);
     }
 
-    function transferOwnership(address newOwner) public {
+    modifier onlyOwner() {
         require(msg.sender == owner, "Caller is not the owner");
+        _;
+    }
+
+    function transferOwnership(address newOwner) public onlyOwner {
         owner = newOwner;
+    }
+
+    function changeGreeting(bytes32 newGreeting) public onlyOwner{
+        greeting = newGreeting;
     }
 }
